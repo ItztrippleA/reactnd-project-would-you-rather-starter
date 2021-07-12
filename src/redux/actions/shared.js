@@ -1,11 +1,11 @@
-import { receiveUsers, saveUserAnswer, addUserPoll } from "../actions/users";
-import { receivePolls, savePollAnswer, addPoll } from "../actions/polls";
-import { setAuthedUser } from "../actions/authedUser";
-import { getInitialUsers } from "../utils/api";
-import { getInitialPolls } from "../utils/api";
-import { savePollAnswerAPI } from "../utils/api";
+import { receiveUsers, saveUserAnswer, addUserPoll } from "./users";
+import { receivePolls, savePollAnswer, addPoll } from "./polls";
+import { setAuthedUser } from "./authedUser";
+import { getInitialUsers } from "../../utils/api";
+import { getInitialPolls } from "../../utils/api";
+import { savePollAnswerAPI } from "../../utils/api";
 import { showLoading, hideLoading } from "react-redux-loading";
-import { savePollAPI } from "../utils/api";
+import { savePollAPI } from "../../utils/api";
 
 export function handleInitialPolls() {
   return (dispatch) => {
