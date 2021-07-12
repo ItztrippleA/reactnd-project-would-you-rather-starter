@@ -1,5 +1,5 @@
 import { combineReducers } from "redux";
-import authedUser from "./authedUser";
+import authedUser from "./authedUsers";
 import users from "./users";
 import polls from "./polls";
 import { loadingBarReducer } from "react-redux-loading";
