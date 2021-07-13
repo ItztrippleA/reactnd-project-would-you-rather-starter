@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import { setAuthedUser } from "../redux/actions/authedUser";
+import { withRouter } from "react-router-dom";
 
 class Login extends Component {
   state = {
@@ -78,4 +79,4 @@ function mapDispatchToProps(dispatch) {
   };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Login));

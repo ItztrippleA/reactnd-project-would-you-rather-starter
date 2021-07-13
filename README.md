@@ -13,6 +13,5 @@ The `_DATA.js` file represents a fake database and methods that let you access t
 # Instructions
 
 -Clone the project with git@github.com:ItztrippleA/reactnd-project-would-you-rather-starter.git
-
 -CD into the project and install the dependencies with yarn install or npm i
 -Run the app with yarn start or npm start
