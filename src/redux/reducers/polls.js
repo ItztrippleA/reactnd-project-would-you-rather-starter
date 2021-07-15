@@ -1,28 +1,34 @@
-import { RECEIVE_POLLS, SAVE_POLL_ANSWER, ADD_POLL } from "../actions/polls";
+import {
+  RECEIVE_QUESTIONS,
+  ADD_QUESTION,
+  ADD_QUESTION_ANSWER,
+} from "../actions/polls";
 
 export default function questions(state = {}, action) {
   switch (action.type) {
-    case RECEIVE_POLLS:
+    case RECEIVE_QUESTIONS:
       return {
         ...state,
         ...action.questions,
       };
-    case SAVE_POLL_ANSWER:
-      const { authedUser, qid, answer } = action;
+    case ADD_QUESTION:
       return {
         ...state,
-        [qid]: {
-          ...state[qid],
-          [answer]: {
-            ...state[qid][answer],
-            votes: state[qid][answer].votes.concat([authedUser]),
+        [action.question.id]: action.question,
+      };
+    case ADD_QUESTION_ANSWER:
+      return {
+        ...state,
+        [action.questionID]: {
+          ...state[action.questionID],
+          [action.option]: {
+            ...state[action.questionID][action.option],
+            votes: [
+              ...state[action.questionID][action.option].votes,
+              action.authedUser,
+            ],
           },
         },
-      };
-    case ADD_POLL:
-      return {
-        ...state,
-        [action.poll.id]: action.poll,
       };
     default:
       return state;

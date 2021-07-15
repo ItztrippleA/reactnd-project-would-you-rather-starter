@@ -1,82 +1,107 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import { connect } from "react-redux";
 import { setAuthedUser } from "../redux/actions/authedUser";
 import { withRouter } from "react-router-dom";
 
 class Login extends Component {
   state = {
-    selectedUser: "",
+    user: "none",
+  };
+
+  changeUser = (e) => {
+    const user = e.target.value;
+    this.setState(() => ({ user }));
   };
 
   handleLogin = (e) => {
     e.preventDefault();
-    const { selectedUser } = this.state;
-    const { setAuthedUser } = this.props;
-
-    if (selectedUser) {
-      setAuthedUser(selectedUser);
-    } else alert("No User Selected");
+    this.props.dispatch(setAuthedUser(this.state.user));
+    this.props.history.goBack();
   };
 
-  onSelectUser = (selectedUser) => this.setState({ selectedUser });
-
   render() {
-    const { users } = this.props;
-    const { selectedUser } = this.state;
-
     return (
-      <Fragment>
-        <div className="form signin-form">
-          <div className="form-header">
-            <p className="form-title">Would You Rather - login</p>
-          </div>
-          <div className="form-body">
-            <form onSubmit={this.handleLogin}>
-              <label className="sigin-body-p">Signin with a user: </label>
-              <div className="signin-body-form">
-                <img
-                  src={
-                    selectedUser === ""
-                      ? "http://www.masscue.org/wp-content/uploads/2017/03/male-no-image.jpg"
-                      : users[selectedUser].avatarURL
-                  }
-                  alt={users[selectedUser]}
-                  className="profile-pic"
-                />
-                <select
-                  className="login-user-select"
-                  onChange={(e) => this.onSelectUser(e.target.value)}
-                >
-                  <option value=""> Select User</option>
-                  {Object.keys(users).map((user) => (
-                    <option className="test" key={user} value={user}>
-                      {user}
-                    </option>
-                  ))}
-                </select>
-              </div>
+      <div className="container content center">
+        <div className="row">
+          <h1 className="center-align ">W-Y-R</h1>
+        </div>
 
-              <button className="button">SIGN IN</button>
-            </form>
+        <div className="row">
+          <div className="col s12 l6 offset-l3 card-col">
+            <div className="card card-login  ">
+              <div className="card-content">
+                <span className="card-title ">Please sign in to continue</span>
+                <form onSubmit={this.handleLogin}>
+                  <select
+                    className="browser-default"
+                    onChange={this.changeUser}
+                    value={this.state.user}
+                  >
+                    <option value="none" disabled>
+                      Choose user
+                    </option>
+                    {this.props.userIds.map((userId) => (
+                      <option key={userId} value={userId}>
+                        {this.props.users[userId].name}
+                      </option>
+                    ))}
+                  </select>
+
+                  <button
+                    className="waves-effect waves-light btn-large #263238 blue-grey darken-4"
+                    disabled={this.state.user === "none"}
+                  >
+                    Sign In
+                    <i className="material-icons right">arrow_right</i>
+                  </button>
+                </form>
+              </div>
+            </div>
           </div>
         </div>
-      </Fragment>
+      </div>
     );
   }
 }
 
 function mapStateToProps({ users }) {
   return {
+    userIds: Object.keys(users),
     users,
   };
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
-    setAuthedUser: (id) => {
-      dispatch(setAuthedUser(id));
-    },
-  };
-}
+export default withRouter(connect(mapStateToProps)(Login));
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Login));
+/*
+      <section>
+        <div className="wrapper">
+          <div className="box">
+            <div className="box-header center">
+              <h3>Welcome to the Would You Rather App!</h3>
+              <h5>Please sign in to continue</h5>
+            </div>
+
+            <div className="box-content center">
+              <h1>Sign in</h1>
+
+
+              <form onSubmit={this.handleLogin}>
+                <select onChange={this.changeUser} value={this.state.user}>
+                  <option value="none" disabled defaultValue>
+                    Select User
+                  </option>
+                  {this.props.userIds.map(userId => (
+                    <option key={userId} value={userId}>
+                      {this.props.users[userId].name}
+                    </option>
+                  ))}
+                </select>
+                
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+
+*/

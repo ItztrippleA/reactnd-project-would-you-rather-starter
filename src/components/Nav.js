@@ -1,31 +1,75 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { connect } from "react-redux";
+import "@material-ui/icons";
 
-export default function Nav() {
-  return (
-    <nav>
-      <ul className="nav">
-        <li className="nav-li">
-          <NavLink className="nav-li" to="/" exact activeClassName="active">
-            Home
-          </NavLink>
-        </li>
-        <li className="nav-li">
-          <NavLink
-            className="nav-li"
-            to="/leaderboard"
-            exact
-            activeClassName="active"
-          >
-            Leaderboard
-          </NavLink>
-        </li>
-        <li className="nav-li">
-          <NavLink className="nav-li" to="/add" exact activeClassName="active">
-            Add Poll
-          </NavLink>
-        </li>
-      </ul>
+const Header = ({ authedUser, users }) => (
+  <header>
+    <nav className=" #263238 blue-grey darken-4">
+      <div className="container">
+        <div className="nav-wrapper">
+          <a data-target="mobile-demo" className="sidenav-trigger">
+            <i className="material-icons">menu</i>
+          </a>
+          <ul className="sidenav" id="mobile-demo">
+            <li>
+              <Link to="/">HOME</Link>
+            </li>
+            <li>
+              <Link to="/add">NEW QUESTION</Link>
+            </li>
+            <li>
+              <Link to="/leaderboard">LEADERBOARD</Link>
+            </li>
+          </ul>
+          <ul className="right">
+            <li>
+              {authedUser === null ? (
+                <h3 className="waves-effect">Login</h3>
+              ) : (
+                <span>
+                  <img
+                    className="avatar"
+                    src={users[authedUser].avatarURL}
+                    alt=""
+                  />
+                  <span className="hide-on-med-and-down">
+                    {users[authedUser].name}
+                  </span>
+                  <Link
+                    className="waves-effect waves-light btn #263238 blue-grey darken-4"
+                    to="/logout"
+                  >
+                    LOGOUT
+                    <i className="material-icons right">account_circle</i>
+                  </Link>
+                </span>
+              )}
+            </li>
+          </ul>
+
+          <ul id="nav-mobile" className="left hide-on-med-and-down">
+            <li>
+              <Link to="/">HOME</Link>
+            </li>
+            <li>
+              <Link to="/add">NEW QUESTION</Link>
+            </li>
+            <li>
+              <Link to="/leaderboard">LEADERBOARD</Link>
+            </li>
+          </ul>
+        </div>
+      </div>
     </nav>
-  );
+  </header>
+);
+
+function mapStateToProps({ authedUser, users }) {
+  return {
+    authedUser,
+    users,
+  };
 }
+
+export default connect(mapStateToProps)(Header);

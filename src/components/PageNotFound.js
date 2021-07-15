@@ -1,25 +1,15 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import Login from "./Login";
+import { Link } from "react-router-dom";
 
-function PageNotFound() {
+export default () => {
   return (
-    <div className="center">
-      <h1>Oops!</h1>
-      <p>We can't seem to find the page you're looking for.</p>
-      <p className="padding-top">
-        <Router>
-          <Switch>
-            <Route component={Login} />
-          </Switch>
-        </Router>
-        {/* <NavLink className="click-here" to="/">
-          Click here
-        </NavLink>{" "} */}
-        to go back to home page
-      </p>
+    <div className="container content">
+      <div className="row">
+        <h1 className="center-align">Page not found</h1>
+        <p className="center-align">
+          You can return <Link to="/">home</Link>.
+        </p>
+      </div>
     </div>
   );
-}
-
-export default PageNotFound;
+};

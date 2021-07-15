@@ -1,44 +1,71 @@
 import React, { Component, Fragment } from "react";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import Login from "../components/Login";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from "react-router-dom";
 import { connect } from "react-redux";
-import { handleInitialUsers } from "../redux/actions/shared";
-import Dashboard from "./Dashboard";
-import PollDetails from "./PollDetails";
+import { handleInitialData } from "../redux/actions/shared";
 import LoadingBar from "react-redux-loading";
-import AddPoll from "./AddPoll";
-import Leaderboard from "../components/LeaderBoard";
-import PageNotFound from "./PageNotFound";
+import Header from "./Nav";
+import Login from "./Login";
+import Questions from "./PollDetails";
+import Question from "./Poll";
+import Leaderboard from "./Leaderboard";
+import Add from "./AddPoll";
+import NotFound from "./PageNotFound";
+import Logout from "./Logout";
+import "../materialize/materialize.min.css";
+//import './materialize/materialize.min.js';
+import "../App.css";
 
 class App extends Component {
   componentDidMount() {
-    const AUTHED_ID = null;
-    this.props.dispatch(handleInitialUsers(AUTHED_ID));
+    this.props.dispatch(handleInitialData());
   }
 
   render() {
     return (
       <Router>
         <Fragment>
-          <LoadingBar style={{ backgroundColor: "#25baa2" }} />
+          <LoadingBar style={{ backgroundColor: "#25baa2", height: "3px" }} />
+          <Header />
+
           <Switch>
-            {this.props.authedUser === null ? (
-              <Route path="/" exact component={Login} />
-            ) : (
-              <Fragment>
-                <Route path="/" exact component={Dashboard} />
-                <Route path="/questions/:question_id" component={PollDetails} />
-                <Route path="/add" exact component={AddPoll} />
-                <Route path="/leaderboard" exact component={Leaderboard} />
-              </Fragment>
-            )}
-            <Route component={PageNotFound} />
+            <Route path="/login" component={Login} />
+            <VerifyRoute exact path="/" component={Questions} />
+            <VerifyRoute
+              exact
+              path="/questions/:question_id"
+              component={Question}
+            />
+            <VerifyRoute exact path="/leaderboard" component={Leaderboard} />
+            <VerifyRoute exact path="/add" component={Add} />
+            <Route exact path="/logout" component={Logout} />
+            <Route component={NotFound} />
           </Switch>
         </Fragment>
       </Router>
     );
   }
 }
+
+const VerifyRoute = connect(mapStateToProps)(
+  ({ component: Component, authedUser, ...rest }) => (
+    <Route
+      {...rest}
+      render={(props) =>
+        authedUser !== null ? (
+          <Component {...props} />
+        ) : (
+          <Redirect push to="/login" />
+        )
+      }
+    />
+  )
+);
+
 function mapStateToProps({ authedUser }) {
   return {
     authedUser,

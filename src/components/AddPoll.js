@@ -1,94 +1,94 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import { connect } from "react-redux";
-import TitleBar from "./TitleBar";
-import { handleAddPoll } from "../redux/actions/shared";
-import { Redirect } from "react-router-dom";
+import { handleAddQuestion } from "../redux/actions/shared";
+import { withRouter } from "react-router-dom";
 
-class AddPoll extends Component {
+class Add extends Component {
   state = {
-    optionOne: "",
-    optionTwo: "",
-    toHome: false,
+    questionOne: "",
+    questionTwo: "",
   };
 
-  handleOptionOne = (e) => {
-    this.setState({
-      optionOne: e.target.value,
-    });
+  handleQuestionOne = (e) => {
+    const questionOne = e.target.value;
+    this.setState(() => ({
+      questionOne,
+    }));
   };
 
-  handleOptionTwo = (e) => {
-    this.setState({
-      optionTwo: e.target.value,
-    });
+  handleQuestionTwo = (e) => {
+    const questionTwo = e.target.value;
+    this.setState(() => ({
+      questionTwo,
+    }));
   };
 
   handleSubmit = (e) => {
     e.preventDefault();
-    const { optionOne, optionTwo } = this.state;
-    this.props.addPoll(optionOne, optionTwo);
+
+    const { questionOne, questionTwo } = this.state;
+    const { dispatch } = this.props;
+
+    dispatch(handleAddQuestion(questionOne, questionTwo));
+
     this.setState(() => ({
-      toHome: true,
+      questionOne: "",
+      questionTwo: "",
     }));
+
+    this.props.history.push("/");
   };
 
   render() {
-    const { toHome } = this.state;
-
-    if (toHome === true) {
-      return <Redirect to="/" />;
-    }
-
     return (
-      <Fragment>
-        <TitleBar />
-        <div className="form margin poll-details-form">
-          <div className="form-header">
-            <p className="form-title">Would You Rather</p>
-          </div>
-          {
-            <form
-              onSubmit={this.handleSubmit}
-              id="addPoll-form"
-              className="form-body"
-            >
-              <div className="input-text-container">
-                <textarea
-                  className="block input-text"
-                  name="optionOne"
-                  placeholder="Option One"
-                  required
-                  spellCheck="false"
-                  onChange={this.handleOptionOne}
-                  rows="2"
-                  cols="60"
-                />
-
-                <textarea
-                  className="block input-text"
-                  name="optionTwo"
-                  placeholder="Option Two"
-                  required
-                  spellCheck="false"
-                  onChange={this.handleOptionTwo}
-                />
-              </div>
-
-              <button className="button">Submit</button>
-            </form>
-          }
+      <div className="container content">
+        <div className="row">
+          <h1 className="center-align question">Create New Question</h1>
         </div>
-      </Fragment>
+
+        <div className="row">
+          <div className="col s12 m8 l6 offset-m2 offset-l3">
+            <div className="card">
+              <div className="card-content">
+                <div className="box-header">
+                  <h6 className="question">Complete the question:</h6>
+                </div>
+                <div className="box-content question">
+                  <h1>Would you rather...</h1>
+                  <form onSubmit={this.handleSubmit}>
+                    <input
+                      type="text"
+                      placeholder="Enter option one text here"
+                      value={this.state.questionOne}
+                      onChange={this.handleQuestionOne}
+                      className="question"
+                    />
+                    <center>or</center>
+                    <input
+                      type="text"
+                      placeholder="Enter option two text here"
+                      value={this.state.questionTwo}
+                      onChange={this.handleQuestionTwo}
+                    />
+                    <button
+                      className="waves-effect waves-light btn-large"
+                      disabled={
+                        this.state.questionOne === "" ||
+                        this.state.questionTwo === ""
+                      }
+                    >
+                      SUBMIT QUESTIONS
+                      <i className="material-icons right">arrow_right</i>
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     );
   }
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
-    addPoll: (optionOne, optionTwo) => {
-      dispatch(handleAddPoll(optionOne, optionTwo));
-    },
-  };
-}
-
-export default connect(null, mapDispatchToProps)(AddPoll);
+export default withRouter(connect()(Add));

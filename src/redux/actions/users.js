@@ -1,27 +1,27 @@
 export const RECEIVE_USERS = "RECEIVE_USERS";
-export const SAVE_USER_ANSWER = "SAVE_USER_ANSWER";
-export const ADD_USER_POLL = "ADD_USER_POLL";
+export const ADD_USER_QUESTION = "ADD_USER_QUESTION";
+export const ANSWER_QUESTION = "ANSWER_QUESTION";
 
 export function receiveUsers(users) {
   return {
     type: RECEIVE_USERS,
-    ...users,
+    users,
   };
 }
 
-export function saveUserAnswer(authedUser, qid, answer) {
+export function addUserQuestion(authedUser, questionID) {
   return {
-    type: SAVE_USER_ANSWER,
+    type: ADD_USER_QUESTION,
     authedUser,
-    qid,
-    answer,
+    questionID,
   };
 }
 
-export function addUserPoll(authedUser, id) {
+export function answerQuestion(authedUser, questionID, option) {
   return {
-    type: ADD_USER_POLL,
+    type: ANSWER_QUESTION,
     authedUser,
-    id,
+    questionID,
+    option,
   };
 }

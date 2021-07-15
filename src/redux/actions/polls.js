@@ -1,27 +1,26 @@
-export const RECEIVE_POLLS = "RECEIVE_POLLS";
-export const SAVE_POLL_ANSWER = "SAVE_POLL_ANSWER";
-export const SAVE_POLL = "SAVE_POLL";
-export const ADD_POLL = "ADD_POLL";
+export const RECEIVE_QUESTIONS = "RECEIVE_QUESTIONS";
+export const ADD_QUESTION = "ADD_QUESTION";
+export const ADD_QUESTION_ANSWER = "ADD_QUESTION_ANSWER";
 
-export function receivePolls(questions) {
+export function receiveQuestions(questions) {
   return {
-    type: RECEIVE_POLLS,
-    ...questions,
+    type: RECEIVE_QUESTIONS,
+    questions,
   };
 }
 
-export function savePollAnswer(authedUser, qid, answer) {
+export function addQuestion(question) {
   return {
-    type: SAVE_POLL_ANSWER,
+    type: ADD_QUESTION,
+    question,
+  };
+}
+
+export function addQuestionAnswer(authedUser, questionID, option) {
+  return {
+    type: ADD_QUESTION_ANSWER,
     authedUser,
-    qid,
-    answer,
-  };
-}
-
-export function addPoll(poll) {
-  return {
-    type: ADD_POLL,
-    poll,
+    questionID,
+    option,
   };
 }

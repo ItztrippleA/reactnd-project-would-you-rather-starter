@@ -1,56 +1,71 @@
-import { receiveUsers, saveUserAnswer, addUserPoll } from "./users";
-import { receivePolls, savePollAnswer, addPoll } from "./polls";
+import {
+  getInitialData,
+  saveQuestion,
+  saveQuestionAnswer,
+} from "../../utils/api";
+import { receiveUsers, addUserQuestion, answerQuestion } from "./users";
+import { receiveQuestions, addQuestion, addQuestionAnswer } from "./polls";
 import { setAuthedUser } from "./authedUser";
-import { getInitialUsers } from "../../utils/api";
-import { getInitialPolls } from "../../utils/api";
-import { savePollAnswerAPI } from "../../utils/api";
 import { showLoading, hideLoading } from "react-redux-loading";
-import { savePollAPI } from "../../utils/api";
 
-export function handleInitialPolls() {
+const AUTHED_ID = null;
+
+export function handleInitialData() {
   return (dispatch) => {
     dispatch(showLoading());
-    return getInitialPolls().then((questions) => {
-      dispatch(receivePolls(questions));
-      dispatch(hideLoading());
-    });
-  };
-}
-
-export function handleInitialUsers(AUTHED_ID) {
-  return (dispatch) => {
-    dispatch(showLoading());
-    return getInitialUsers().then((users) => {
-      dispatch(receiveUsers(users));
-      dispatch(setAuthedUser(AUTHED_ID));
-      dispatch(hideLoading());
-    });
-  };
-}
-
-export function handleSavePollAnswer(qid, answer) {
-  return (dispatch, getState) => {
-    const { authedUser } = getState();
-    dispatch(showLoading());
-    return savePollAnswerAPI({ authedUser, qid, answer }).then(() => {
-      dispatch(savePollAnswer(authedUser, qid, answer));
-      dispatch(saveUserAnswer(authedUser, qid, answer));
-      dispatch(hideLoading());
-    });
-  };
-}
-
-export function handleAddPoll(optionOneText, optionTwoText) {
-  return (dispatch, getState) => {
-    const { authedUser } = getState();
-    const author = authedUser;
-    dispatch(showLoading());
-    return savePollAPI({ optionOneText, optionTwoText, author }).then(
-      (poll) => {
-        dispatch(addPoll(poll));
-        dispatch(addUserPoll(authedUser, poll.id));
+    return getInitialData()
+      .then(({ users, questions }) => {
+        dispatch(receiveQuestions(questions));
+        dispatch(receiveUsers(users));
+        dispatch(setAuthedUser(AUTHED_ID));
         dispatch(hideLoading());
-      }
-    );
+      })
+      .catch(function (error) {
+        alert("There was an error loading initial data: ", error);
+      });
+  };
+}
+
+export function handleAddQuestion(optionOneText, optionTwoText) {
+  return (dispatch, getState) => {
+    const { authedUser } = getState();
+
+    dispatch(showLoading());
+
+    return saveQuestion({
+      optionOneText,
+      optionTwoText,
+      author: authedUser,
+    })
+      .then((question) => {
+        dispatch(addQuestion(question));
+        dispatch(addUserQuestion(authedUser, question.id));
+        dispatch(hideLoading());
+      })
+      .catch(function (error) {
+        alert("There was an error adding new question:", error);
+      });
+  };
+}
+
+export function handleAnswerQuestion(questionID, option) {
+  return (dispatch, getState) => {
+    const { authedUser } = getState();
+
+    dispatch(showLoading());
+
+    return saveQuestionAnswer({
+      authedUser,
+      qid: questionID,
+      answer: option,
+    })
+      .then(() => {
+        dispatch(answerQuestion(authedUser, questionID, option));
+        dispatch(addQuestionAnswer(authedUser, questionID, option));
+        dispatch(hideLoading());
+      })
+      .catch(function (error) {
+        alert("There was an error answering a question: ", error);
+      });
   };
 }
