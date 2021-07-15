@@ -7,7 +7,7 @@ import Header from "./Nav";
 import Login from "./Login";
 import Questions from "./PollDetails";
 import Question from "./Poll";
-import Leaderboard from "./Leaderboard";
+import Leaderboard from "./LeaderBoard";
 import Add from "./AddPoll";
 import NotFound from "./PageNotFound";
 import Logout from "./Logout";
