@@ -1,10 +1,5 @@
 import React, { Component, Fragment } from "react";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Redirect,
-} from "react-router-dom";
+import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import { handleInitialData } from "../redux/actions/shared";
 import LoadingBar from "react-redux-loading";
@@ -27,7 +22,7 @@ class App extends Component {
 
   render() {
     return (
-      <Router>
+      <BrowserRouter>
         <Fragment>
           <LoadingBar style={{ backgroundColor: "#25baa2", height: "3px" }} />
           <Header />
@@ -46,7 +41,7 @@ class App extends Component {
             <Route component={NotFound} />
           </Switch>
         </Fragment>
-      </Router>
+      </BrowserRouter>
     );
   }
 }
